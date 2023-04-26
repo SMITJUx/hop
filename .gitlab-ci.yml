@@ -60,9 +60,6 @@ deploy:
     script:
         - apk update
         - apk add bash
-        # Set HTTPS certificates
-        - cat $LOCALHOST_PEM >> ${CI_PROJECT_DIR}/bin/localhost.pem
-        - cat $LOCALHOST_KEY_PEM >> ${CI_PROJECT_DIR}/bin/localhost-key.pem
         # Set project environnement.
         - echo "NODE_ENV=$NODE_ENV" >> .env
         # App settings.
