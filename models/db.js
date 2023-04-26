@@ -1,13 +1,15 @@
 const mongoose = require('mongoose')
+const config = require('../config')
 
-const url = 'mongodb://mongo:27017/hop'
-const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}
+const {
+    db: { host, port, name },
+} = config.params
 
 mongoose.set('strictQuery', true)
-mongoose.connect(url, options)
+mongoose.connect(`mongodb://${host}:${port}/${name}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
 
 mongoose.connection.on('connecting', () => {
     console.log('Connecting')

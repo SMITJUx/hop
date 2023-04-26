@@ -1,8 +1,7 @@
-require('dotenv').config()
-
 const passport = require('passport')
-const authenticate = require('../middleware/auth.middleware')
-const User = require('../models/auth/user.model')
+const authenticate = require('../../middleware/auth.middleware')
+const User = require('../../models/auth/user.model')
+const config = require('../../config')
 
 const controller = {
     login: async function (req, res, next) {
@@ -10,17 +9,17 @@ const controller = {
         const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
         res.statusCode = 200
-        res.cookie("accessToken", accessToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+        res.cookie('accessToken', accessToken, {
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
-        res.cookie("refreshToken", refreshToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+        res.cookie('refreshToken', refreshToken, {
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
         res.setHeader('Content-Type', 'application/json')
         res.json({
@@ -53,11 +52,11 @@ const controller = {
         const accessToken = authenticate.getAccessToken({ _id: req.user._id })
 
         res.statusCode = 200
-        res.cookie("accessToken", accessToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+        res.cookie('accessToken', accessToken, {
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
         res.setHeader('Content-Type', 'application/json')
         res.json({

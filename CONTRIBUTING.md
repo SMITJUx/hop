@@ -48,7 +48,7 @@ We can now create our new feature branch.
 git checkout -b feature/helloworld  # Create and checkout on the feature/helloworld branch
 ```
 
-****Also, it's important to note that you always need to write unit tests related to your feature. Before pushing your feature branch, always execute unit tests and check your code format using a linter.****
+\***\*Also, it's important to note that you always need to write unit tests related to your feature. Before pushing your feature branch, always execute unit tests and check your code format using a linter.\*\***
 
 ```Bash
 npm run test                        # Non-regression tests
