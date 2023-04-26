@@ -53,31 +53,29 @@ const parseTravel = (data) => {
         flights: parseFlights(data.segments),
     }
 }
-exports.parseResponse = (data) => {
+exports.parseResponse = (data, isReturnedDate) => {
     try {
         return {
             best: {
                 price: data.buckets[0].items[0].price.formatted,
                 ...parseTravel(data.buckets[0].items[0].legs[0]),
+                ...(isReturnedDate ? parseTravel(data.buckets[0].items[0].legs[1]) : {}),
                 link: data.buckets[0].items[0].deeplink,
             },
             cheapest: {
                 price: data.buckets[1].items[0].price.formatted,
                 ...parseTravel(data.buckets[1].items[0].legs[0]),
+                ...(isReturnedDate ? parseTravel(data.buckets[1].items[0].legs[1]) : {}),
                 link: data.buckets[1].items[0].deeplink,
             },
             fastest: {
                 price: data.buckets[2].items[0].price.formatted,
                 ...parseTravel(data.buckets[2].items[0].legs[0]),
+                ...(isReturnedDate ? parseTravel(data.buckets[2].items[0].legs[1]) : {}),
                 link: data.buckets[2].items[0].deeplink,
-            },
-            direct: {
-                price: data.buckets[3].items[0].price.formatted,
-                ...parseTravel(data.buckets[3].items[0].legs[0]),
-                link: data.buckets[3].items[0].deeplink,
             },
         }
     } catch (err) {
-        throw new Error('Error while parsing flights API response ...')
+        throw err
     }
 }
