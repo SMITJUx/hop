@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 
 const TravelSchema = new mongoose.Schema(
     {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
         numberOfAdults: {
             type: Number,
             min: 1,
