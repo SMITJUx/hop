@@ -89,7 +89,8 @@ const controller = {
                 }
                 res.status(401).json({
                     success: false,
-                    message: "You are using a used JWT token, it's suspicious, your account is banned.",
+                    message:
+                        "You are using a used JWT token, it's suspicious, your account is banned.",
                 })
                 return
             }
@@ -131,7 +132,8 @@ const controller = {
                 }
                 res.status(401).json({
                     success: false,
-                    message: "You are using a used JWT token, it's suspicious, your account is banned.",
+                    message:
+                        "You are using a used JWT token, it's suspicious, your account is banned.",
                 })
                 return
             }
