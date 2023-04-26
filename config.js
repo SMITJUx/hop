@@ -60,6 +60,14 @@ config.corsOptions = {
     optionsSuccessStatus: 200,
 }
 
+config.helmetOptions = {
+    contentSecurityPolicy: {
+        directives: {
+            'connect-src': config.whitelist,
+        },
+    },
+}
+
 config.swagger = {
     definition: {
         openapi: '3.0.0',
