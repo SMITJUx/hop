@@ -60,4 +60,32 @@ config.corsOptions = {
     optionsSuccessStatus: 200,
 }
 
+config.swagger = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'hop API',
+            version: '0.1.0',
+            description: 'Simple API to find the best flights for your travels!',
+            license: {
+                name: 'MIT',
+                url: 'https://spdx.org/licenses/MIT.html',
+            },
+            contact: {
+                name: 'Samir J.',
+                email: '0xPark@proton.me',
+            },
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+            },
+            {
+                url: 'https://hophop.world',
+            },
+        ],
+    },
+    apis: ['./routes/*.js', './models/*.js'],
+}
+
 module.exports = config

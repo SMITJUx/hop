@@ -19,36 +19,8 @@ const User = require('./models/user.model')
 const config = require('./config')
 
 const app = express()
+const specs = swaggerJsdoc(config.swagger)
 
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'hop API',
-            version: '0.1.0',
-            description: 'Simple API to find the best flights for your travels!',
-            license: {
-                name: 'MIT',
-                url: 'https://spdx.org/licenses/MIT.html',
-            },
-            contact: {
-                name: 'Samir J.',
-                email: '0xPark@proton.me',
-            },
-        },
-        servers: [
-            {
-                url: 'http://localhost:3000',
-            },
-            {
-                url: 'https://hophop.world',
-            },
-        ],
-    },
-    apis: ['./routes/*.js', './models/*.js'],
-}
-
-const specs = swaggerJsdoc(options)
 app.use(favicon(__dirname + '/public/favicon.png'))
 app.use(logger('dev'))
 app.use(express.json())
