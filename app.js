@@ -9,6 +9,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
 const authRouter = require('./routes/auth/auth.router')
+const travelsRouter = require('./routes/travels/travels.router')
 const authenticate = require('./middleware/auth.middleware')
 const User = require('./models/auth/user.model')
 
@@ -30,6 +31,7 @@ passport.use(authenticate.jwtStrategy)
 passport.use('jwt-refresh', authenticate.jwtRefreshStrategy)
 
 app.use('/auth', authRouter)
+app.use('/travels', travelsRouter)
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
