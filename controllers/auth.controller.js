@@ -95,6 +95,38 @@ const controller = {
             next(err)
         }
     },
+
+    logout: async (req, res, next) => {
+        try {
+            let refreshToken = authenticate.jwtRefreshTokenCookieExtractor(req)
+            let token = await RefreshToken.findOne({ userId: req.user.id, value: refreshToken })
+
+            if (token && token.revoked) {
+                const user = await User.findOne({ _id: req.user.id })
+                if (user) {
+                    user.revoked = Date.now()
+                    await user.save()
+                }
+                res.status(401).send(
+                    "You are using a used JWT token, it's suspicious, your account is banned.",
+                )
+                return
+            }
+
+            if (token && !token.revoked) {
+                token.revoked = Date.now()
+                await token.save()
+            }
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json({
+                success: true,
+                status: 'You have successfully been logout on the server side!',
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
 }
 
 module.exports = controller

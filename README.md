@@ -11,6 +11,7 @@
 | **POST** | **/api/auth/login**    | Login and receive an access and a refresh JWT token. |
 | **POST** | **/api/auth/register** | Create an account.                                   |
 | **GET**  | **/api/auth/refresh**  | Refresh your JWT access token.                       |
+| **GET**  | **/api/auth/logout**   | Logout user and revoke refresh token.                |
 
 ### Users
 

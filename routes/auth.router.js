@@ -130,4 +130,31 @@ router.post('/register', controller.register)
  */
 router.get('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   get:
+ *     summary: User logout with refresh token revoked
+ *     tags: [Authentication]
+ *     security:
+ *       - cookieRefreshAuth: [ ]
+ *     responses:
+ *       200:
+ *         description: User was successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 status:
+ *                   type: string
+ *       401:
+ *         description: Cannot authorize access to this endpoint
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/logout', authenticate.verifyUserJwt, controller.logout)
+
 module.exports = router
