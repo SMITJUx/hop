@@ -68,7 +68,14 @@ const controller = {
             if (token) {
                 console.log('Token found!')
                 if (token.revoked) {
-                    res.status(401).send('You are using a used JWT token, it\'s suspicious.')
+                    const user = await User.findOne({ _id: req.user.id })
+                    if (user) {
+                        user.revoked = Date.now()
+                        user.save()
+                    }
+                    res.status(401).send(
+                        "You are using a used JWT token, it's suspicious, your account is banned.",
+                    )
                     return
                 } else {
                     token.revoked = Date.now()

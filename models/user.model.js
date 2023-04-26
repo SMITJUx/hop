@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema(
             enum: [roles.customer, roles.staff, roles.admin],
             default: [roles.customer],
         },
+        revoked: {
+            type: Date,
+            default: null,
+        },
     },
     { timestamps: true },
 )

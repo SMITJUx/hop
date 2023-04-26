@@ -40,7 +40,7 @@ exports.jwtStrategy = new JwtStrategy(
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id }, (err, user) => {
+        User.findOne({ _id: jwt_payload._id, revoked: null }, (err, user) => {
             if (err) {
                 return done(err, false)
             } else if (user) {
@@ -58,7 +58,7 @@ exports.jwtRefreshStrategy = new JwtStrategy(
         secretOrKey: refreshTokenPrivateKey,
     },
     (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id }, (err, user) => {
+        User.findOne({ _id: jwt_payload._id, revoked: null }, (err, user) => {
             if (err) {
                 return done(err, false)
             } else if (user) {
@@ -76,7 +76,7 @@ exports.jwtAdminStrategy = new JwtStrategy(
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, roles: roles.admin }, (err, user) => {
+        User.findOne({ _id: jwt_payload._id, roles: roles.admin, revoked: null }, (err, user) => {
             if (err) {
                 return done(err, false)
             } else if (user) {
