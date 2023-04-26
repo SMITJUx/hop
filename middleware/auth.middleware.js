@@ -17,9 +17,24 @@ exports.getRefreshToken = function (user) {
 
 exports.localStrategy = new LocalStrategy(User.authenticate())
 
+const jwtAccessTokenCookieExtractor = function(req) {
+    let accessToken = null
+    if (req && req.cookies) {
+        accessToken = req.cookies['accessToken']
+    }
+    return accessToken
+}
+const jwtRefreshTokenCookieExtractor = function(req) {
+    let refreshToken = null
+    if (req && req.cookies) {
+        refreshToken = req.cookies['refreshToken']
+    }
+    return refreshToken
+}
+
 exports.jwtStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
         secretOrKey: process.env.ACCESS_TOKEN_PRIVATE_KEY,
     },
     (jwt_payload, done) => {
@@ -37,7 +52,7 @@ exports.jwtStrategy = new JwtStrategy(
 
 exports.jwtRefreshStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJwt.fromExtractors([jwtRefreshTokenCookieExtractor]),
         secretOrKey: process.env.REFRESH_TOKEN_PRIVATE_KEY,
     },
     (jwt_payload, done) => {
