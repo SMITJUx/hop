@@ -91,9 +91,7 @@ router.get('/', authenticate.verifyUserJwt, controller.getAll)
  *                 success:
  *                   type: boolean
  *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Travel'
+ *                   $ref: '#/components/schemas/Travel'
  *       401:
  *         description: Cannot authorize access to this endpoint
  *       500:

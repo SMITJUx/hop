@@ -73,7 +73,10 @@ const controller = {
             await travel.save()
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.json(travel)
+            res.json({
+                success: true,
+                data: travel,
+            })
         } catch (err) {
             next(err)
         }

@@ -29,7 +29,7 @@ const controller = require('../controllers/users.controller')
  *                 success:
  *                   type: boolean
  *                 data:
- *                   $ref: '#/components/schemas/user'
+ *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: Cannot authorize access to this endpoint
  *       500:
