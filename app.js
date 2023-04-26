@@ -30,8 +30,8 @@ passport.deserializeUser(User.deserializeUser())
 passport.use(authenticate.jwtStrategy)
 passport.use('jwt-refresh', authenticate.jwtRefreshStrategy)
 
-app.use('/auth', authRouter)
-app.use('/travels', travelsRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/travels', travelsRouter)
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
