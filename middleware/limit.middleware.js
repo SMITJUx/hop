@@ -1,11 +1,9 @@
 const rateLimit = require('express-rate-limit')
-const config = require('../config')
-
-const limitConfig = config.limit
+const rateLimitConfig = require('../config').rateLimit
 
 exports.rateLimit = rateLimit({
-    windowMs: limitConfig.windowMs,
-    max: limitConfig.max,
-    standardHeaders: limitConfig.standardHeaders,
-    legacyHeaders: limitConfig.legacyHeaders,
+    windowMs: rateLimitConfig.windowMs,
+    max: rateLimitConfig.max,
+    standardHeaders: rateLimitConfig.standardHeaders,
+    legacyHeaders: rateLimitConfig.legacyHeaders,
 })
