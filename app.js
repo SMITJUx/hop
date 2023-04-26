@@ -11,8 +11,7 @@ const cors = require('cors')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
 const authRouter = require('./routes/auth.router')
 const authenticate = require('./middleware/auth.middleware')
-const LocalStrategy = require('passport-local').Strategy
-const User = require('./models/user.model')
+const User = require('./models/auth/user.model')
 
 const app = express()
 
@@ -25,10 +24,11 @@ app.use(helmet())
 app.use(rateLimit)
 app.use(passport.initialize())
 
-passport.use(new LocalStrategy(User.authenticate()))
+passport.use(authenticate.localStrategy)
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 passport.use(authenticate.jwtStrategy)
+passport.use('jwt-refresh', authenticate.jwtRefreshStrategy)
 
 app.use('/auth', authRouter)
 app.get('/', (req, res) => {
