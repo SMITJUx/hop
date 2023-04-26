@@ -9,9 +9,10 @@ const helmet = require('helmet')
 const cors = require('cors')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
 const authRouter = require('./routes/auth.router')
+const usersRouter = require('./routes/users.router')
 const travelsRouter = require('./routes/travels.router')
 const authenticate = require('./middleware/auth.middleware')
-const User = require('./models/auth/user.model')
+const User = require('./models/user.model')
 
 const app = express()
 
@@ -29,8 +30,10 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 passport.use(authenticate.jwtStrategy)
 passport.use('jwt-refresh', authenticate.jwtRefreshStrategy)
+passport.use('jwt-admin', authenticate.jwtAdminStrategy)
 
 app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
 app.use('/api/travels', travelsRouter)
 app.get('/', (req, res) => {
     res.send('Hello world')

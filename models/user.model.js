@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
+const roles = require('../config').roles
 
 const UserSchema = new mongoose.Schema(
     {
@@ -18,8 +19,8 @@ const UserSchema = new mongoose.Schema(
         },
         roles: {
             type: [String],
-            enum: ['CUSTOMER', 'STAFF', 'ADMIN'],
-            default: ['CUSTOMER'],
+            enum: [roles.customer, roles.staff, roles.admin],
+            default: [roles.customer],
         },
     },
     { timestamps: true },
