@@ -2,6 +2,7 @@ require('./models/db')
 
 const createError = require('http-errors')
 const express = require('express')
+const favicon = require('express-favicon')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const passport = require('passport')
@@ -17,6 +18,7 @@ const config = require('./config')
 
 const app = express()
 
+app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
