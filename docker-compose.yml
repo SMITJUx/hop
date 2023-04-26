@@ -5,6 +5,7 @@ services:
         build: .
         ports:
             - '3000:3000'
+        restart: always
         depends_on:
             - mongo
     mongo:
@@ -13,9 +14,9 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${ROOT_DB_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${ROOT_DB_PASSWORD}
-            MONGO_INITDB_DATABASE: ${DEV_DB_NAME}
-            MONGO_DB_USER: ${DEV_DB_USER}
-            MONGO_DB_PASSWORD: ${DEV_DB_PASSWORD}
+            MONGO_INITDB_DATABASE: ${DB_NAME}
+            MONGO_DB_USER: ${DB_USER}
+            MONGO_DB_PASSWORD: ${DB_PASSWORD}
         restart: always
         volumes:
             - data-volume:/data/db
