@@ -1,4 +1,4 @@
-const User = require('../models/auth/user.model')
+const User = require('../models/user.model')
 
 const controller = {
     getMe: async function (req, res, next) {

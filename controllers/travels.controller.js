@@ -1,4 +1,4 @@
-const Travel = require('../models/travels/travel.model')
+const Travel = require('../models/travel.model')
 const api = require('../api/flightlabs.api')
 
 const controller = {

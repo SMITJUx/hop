@@ -1,6 +1,6 @@
 const passport = require('passport')
 const authenticate = require('../middleware/auth.middleware')
-const User = require('../models/auth/user.model')
+const User = require('../models/user.model')
 const config = require('../config')
 
 const controller = {

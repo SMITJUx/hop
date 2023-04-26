@@ -12,7 +12,7 @@ const authRouter = require('./routes/auth.router')
 const usersRouter = require('./routes/users.router')
 const travelsRouter = require('./routes/travels.router')
 const authenticate = require('./middleware/auth.middleware')
-const User = require('./models/auth/user.model')
+const User = require('./models/user.model')
 
 const app = express()
 

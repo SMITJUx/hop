@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
-const roles = require('../../config').roles
+const roles = require('../config').roles
 
 const UserSchema = new mongoose.Schema(
     {

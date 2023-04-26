@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
-const User = require('../models/auth/user.model')
+const User = require('../models/user.model')
 const config = require('../config')
 
 const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
