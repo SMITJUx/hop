@@ -1,6 +1,10 @@
 stages:
+    - test
     - check
     - deploy
+
+include:
+    - template: Jobs/SAST.gitlab-ci.yml
 
 cache:
     # This folder is cached between builds
@@ -8,8 +12,20 @@ cache:
     paths:
         - node_modules/
 
-test:
-    stage: check
+nodejs-scan-sast:
+    stage: test
+    rules:
+        - if: $CI_COMMIT_BRANCH == 'master' || $CI_COMMIT_BRANCH == 'develop'
+          when: always
+
+semgrep-sast:
+    stage: test
+    rules:
+        - if: $CI_COMMIT_BRANCH == 'master' || $CI_COMMIT_BRANCH == 'develop'
+          when: always
+
+non-reg:
+    stage: test
     only:
         refs:
             - merge_request
@@ -26,7 +42,7 @@ test:
         - npm run test
 
 lint:
-    stage: check
+    stage: test
     only:
         refs:
             - merge_request
