@@ -1,7 +1,7 @@
 const passport = require('passport')
 const authenticate = require('../middleware/auth.middleware')
 const User = require('../models/user.model')
-const RefreshToken = require('../models/refreshToken')
+const RefreshToken = require('../models/refreshToken.model')
 const config = require('../config')
 
 const controller = {
