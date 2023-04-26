@@ -6,17 +6,17 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/user.model')
 const config = require('../config')
 
-const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
+const { accessTokenPrivateKey, refreshTokenPrivateKey, expireIn } = config.auth
 const roles = config.roles
 
-const jwtAccessTokenCookieExtractor = function (req) {
+exports.jwtAccessTokenCookieExtractor = function (req) {
     let accessToken = null
     if (req && req.cookies) {
         accessToken = req.cookies['accessToken']
     }
     return accessToken
 }
-const jwtRefreshTokenCookieExtractor = function (req) {
+exports.jwtRefreshTokenCookieExtractor = function (req) {
     let refreshToken = null
     if (req && req.cookies) {
         refreshToken = req.cookies['refreshToken']
@@ -25,18 +25,18 @@ const jwtRefreshTokenCookieExtractor = function (req) {
 }
 
 exports.getAccessToken = function (user) {
-    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
+    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: expireIn.accessToken })
 }
 
 exports.getRefreshToken = function (user) {
-    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
+    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: expireIn.refreshToken })
 }
 
 exports.localStrategy = new LocalStrategy(User.authenticate())
 
 exports.jwtStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
+        jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtAccessTokenCookieExtractor]),
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
@@ -54,7 +54,7 @@ exports.jwtStrategy = new JwtStrategy(
 
 exports.jwtRefreshStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromExtractors([jwtRefreshTokenCookieExtractor]),
+        jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtRefreshTokenCookieExtractor]),
         secretOrKey: refreshTokenPrivateKey,
     },
     (jwt_payload, done) => {
@@ -72,7 +72,7 @@ exports.jwtRefreshStrategy = new JwtStrategy(
 
 exports.jwtAdminStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
+        jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtAccessTokenCookieExtractor]),
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {

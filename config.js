@@ -15,6 +15,10 @@ config.db = {
 config.auth = {
     accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY || '',
     refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY || '',
+    expireIn: {
+        accessToken: '10m',
+        refreshToken: '1d',
+    },
 }
 
 config.api = {
@@ -36,6 +40,7 @@ config.roles = {
 }
 
 config.whitelist = ['https://wwww.hophop.world', 'http://localhost:3000']
+
 config.corsOptions = {
     origin: function (origin, callback) {
         if (!origin || config.whitelist.indexOf(origin) !== -1) {

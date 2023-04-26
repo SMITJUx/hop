@@ -18,7 +18,7 @@ const config = require('./config')
 
 const app = express()
 
-app.use(favicon(__dirname + '/public/favicon.png'));
+app.use(favicon(__dirname + '/public/favicon.png'))
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

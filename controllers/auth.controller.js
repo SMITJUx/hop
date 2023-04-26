@@ -1,6 +1,7 @@
 const passport = require('passport')
 const authenticate = require('../middleware/auth.middleware')
 const User = require('../models/user.model')
+const RefreshToken = require('../models/refreshToken')
 const config = require('../config')
 
 const controller = {
@@ -8,6 +9,9 @@ const controller = {
         try {
             const accessToken = authenticate.getAccessToken({ _id: req.user._id })
             const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
+
+            const token = new RefreshToken({ userId: req.user.id, value: refreshToken })
+            token.save()
 
             res.statusCode = 200
             res.cookie('accessToken', accessToken, {
@@ -58,10 +62,34 @@ const controller = {
 
     refresh: async function (req, res, next) {
         try {
+            let refreshToken = authenticate.jwtRefreshTokenCookieExtractor(req)
+            let token = await RefreshToken.findOne({ userId: req.user.id, value: refreshToken })
+
+            if (token) {
+                console.log('Token found!')
+                if (token.revoked) {
+                    res.status(401).send('You are using a used JWT token, it\'s suspicious.')
+                    return
+                } else {
+                    token.revoked = Date.now()
+                    token.save()
+                }
+            }
+
             const accessToken = authenticate.getAccessToken({ _id: req.user._id })
+            refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
+
+            token = new RefreshToken({ userId: req.user.id, value: refreshToken })
+            token.save()
 
             res.statusCode = 200
             res.cookie('accessToken', accessToken, {
+                secure: config.env !== 'dev',
+                httpOnly: true,
+                sameSite: 'Strict',
+                maxAge: 604800000, // 7 days
+            })
+            res.cookie('refreshToken', refreshToken, {
                 secure: config.env !== 'dev',
                 httpOnly: true,
                 sameSite: 'Strict',
