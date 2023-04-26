@@ -1,13 +1,19 @@
 const Travel = require('../models/travel.model')
 const api = require('../api/flightlabs.api')
+const date = require('../utils/dates.util')
 
 const controller = {
     getAll: async function (req, res, next) {
         try {
             const travels = await Travel.find({ userId: req.user.id })
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-            res.json(travels)
+
+            if (travels?.length) {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(travels)
+            } else {
+                res.status(204).send()
+            }
         } catch (err) {
             next(err)
         }
@@ -24,12 +30,12 @@ const controller = {
 
     getOne: async function (req, res, next) {
         try {
-            const travels = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
+            const travel = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
 
-            if (travels) {
+            if (travel) {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(travels)
+                res.json(travel)
             } else {
                 res.status(404).send()
             }
@@ -40,8 +46,25 @@ const controller = {
 
     addOne: async function (req, res, next) {
         try {
-            const travel = new Travel({ userId: req.user.id, ...req.body })
-            travel.save()
+            const params = {
+                userId: req.user.id,
+                origin: req.body.origin,
+                destination: req.body.destination,
+                departureDate: req.body.departureDate,
+            }
+
+            if (req.params.returnDate) {
+                params.returnDate = req.params.returnDate
+            }
+            if (req.params.numberOfAdults) {
+                params.numberOfAdults = req.params.numberOfAdults
+            }
+            if (req.params.cabinClass) {
+                params.cabinClass = req.params.cabinClass
+            }
+
+            const travel = new Travel(params)
+            await travel.save()
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.json(travel)
@@ -52,7 +75,7 @@ const controller = {
 
     deleteOne: async function (req, res, next) {
         try {
-            const travel = Travel.findOne({ _id: req.params.id, userId: req.user.id })
+            const travel = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
 
             if (travel) {
                 await travel.remove()
@@ -67,23 +90,25 @@ const controller = {
 
     getBestFlights: async function (req, res, next) {
         try {
+            const travel = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
+            if (!travel) {
+                res.status(404).send('Travel not found ...')
+            }
             const response = await api.getBestFlights(
-                req.body.adults,
-                req.body.origin,
-                req.body.destination,
-                req.body.departureDate,
-                req.body.returnDate,
-                req.body.cabinClass,
+                travel.numberOfAdults,
+                travel.origin,
+                travel.destination,
+                date.format(travel.departureDate),
+                date.format(travel.returnDate),
+                travel.cabinClass,
             )
-            const status = response.status
-            if (response.status) {
-                const data = response.data
+            if (response.data.success) {
+                const { best, cheapest, fastest, direct } = api.parseResponse(response.data.data)
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(data)
+                res.json({ best, cheapest, fastest, direct })
             } else {
-                // TODO
-                res.status(404).send()
+                res.status(404).send(response.data.data)
             }
         } catch (err) {
             next(err)

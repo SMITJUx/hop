@@ -31,12 +31,12 @@ const TravelSchema = new mongoose.Schema(
         },
         returnDate: {
             type: Date,
-            required: true,
+            default: null,
         },
         cabinClass: {
             type: String,
             enum: ['economy', 'premiumeconomy', 'business', 'first'],
-            default: ['economy'],
+            default: 'economy',
         },
     },
     { timestamps: true },

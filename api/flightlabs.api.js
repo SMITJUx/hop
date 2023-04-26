@@ -24,3 +24,60 @@ exports.getBestFlights = async (
         },
     })
 }
+
+const parseFlight = (data) => {
+    return {
+        flightNumber: data.flightNumber,
+        company: data.operatingCarrier.name,
+        origin: data.origin,
+        destination: data.destination,
+        departure: data.departure,
+        arrival: data.arrival,
+        durationInMinutes: data.durationInMinutes,
+    }
+}
+const parseFlights = (data) => {
+    const result = []
+    data.forEach((flight) => {
+        result.push(parseFlight(flight))
+    })
+    return result
+}
+const parseTravel = (data) => {
+    return {
+        origin: data.origin,
+        destination: data.destination,
+        durationInMinutes: data.durationInMinutes,
+        departure: data.departure,
+        arrival: data.arrival,
+        flights: parseFlights(data.segments),
+    }
+}
+exports.parseResponse = (data) => {
+    try {
+        return {
+            best: {
+                price: data.buckets[0].items[0].price.formatted,
+                ...parseTravel(data.buckets[0].items[0].legs[0]),
+                link: data.buckets[0].items[0].deeplink,
+            },
+            cheapest: {
+                price: data.buckets[1].items[0].price.formatted,
+                ...parseTravel(data.buckets[1].items[0].legs[0]),
+                link: data.buckets[1].items[0].deeplink,
+            },
+            fastest: {
+                price: data.buckets[2].items[0].price.formatted,
+                ...parseTravel(data.buckets[2].items[0].legs[0]),
+                link: data.buckets[2].items[0].deeplink,
+            },
+            direct: {
+                price: data.buckets[3].items[0].price.formatted,
+                ...parseTravel(data.buckets[3].items[0].legs[0]),
+                link: data.buckets[3].items[0].deeplink,
+            },
+        }
+    } catch (err) {
+        throw new Error('Error while parsing flights API response ...')
+    }
+}
