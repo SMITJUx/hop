@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const config = require('../config')
 
 const {
-    db: { host, port, name },
+    db: { host, port, name, user, password },
 } = config.params
 
 mongoose.set('strictQuery', true)
-mongoose.connect(`mongodb://${host}:${port}/${name}`, {
+mongoose.connect(`mongodb://${user}:${password}@${host}:${port}/${name}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })

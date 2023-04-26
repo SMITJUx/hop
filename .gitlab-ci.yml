@@ -36,5 +36,5 @@ build:
         - docker:dind
     script:
         - apk add --no-cache docker-compose
-        - docker-compose down
-        - docker-compose build
+        - docker-compose down -v  --remove-orphans --rmi all
+        - docker-compose build --no-cache
