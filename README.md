@@ -2,6 +2,17 @@
 
 # API hop
 
+Looking for the best flight deals easily? Hop is a simple API that will look for the best, cheapest, fastest and direct flight. 
+Users can register for an account and log in to search for flights from an origin to a destination for a given date. The information is extracted from the FlightLabs API.
+
+# Content
+- [Pre-requisites](#Pre-requisites)
+- [Getting started](#getting-started)
+- [Test and Deploy](#test-and-deploy)
+- [Features](#Features)
+- [Technologies](#Technologies)
+- [Contributing](#contributing)
+
 ## Routes
 
 ### Authentication
