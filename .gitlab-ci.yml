@@ -12,7 +12,6 @@ test:
     stage: check
     only:
         refs:
-            - /^feature\/*/
             - merge_request
             - develop
             - master
@@ -30,7 +29,6 @@ lint:
     stage: check
     only:
         refs:
-            - /^feature\/*/
             - merge_request
             - develop
             - master
@@ -60,7 +58,7 @@ deploy:
     script:
         - apk update
         - apk add bash
-        # Set project environnement.
+        # Set project environment.
         - echo "NODE_ENV=$NODE_ENV" >> .env
         # App settings.
         - echo "PORT=$PORT" >> .env
