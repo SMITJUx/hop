@@ -1,5 +1,5 @@
-const Travel = require('../../models/travels/travel.model')
-const api = require('../../api/flightlabs.api')
+const Travel = require('../models/travels/travel.model')
+const api = require('../api/flightlabs.api')
 
 const controller = {
     getAll: async function (req, res, next) {

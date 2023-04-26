@@ -1,7 +1,7 @@
 const passport = require('passport')
-const authenticate = require('../../middleware/auth.middleware')
-const User = require('../../models/auth/user.model')
-const config = require('../../config')
+const authenticate = require('../middleware/auth.middleware')
+const User = require('../models/auth/user.model')
+const config = require('../config')
 
 const controller = {
     login: async function (req, res, next) {

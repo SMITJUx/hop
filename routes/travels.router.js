@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const authenticate = require('../../middleware/auth.middleware')
-const controller = require('../../controllers/travels/travels.controller')
+const authenticate = require('../middleware/auth.middleware')
+const controller = require('../controllers/travels.controller')
 
 router.get('/', authenticate.verifyUserJwt, controller.getAll)
 router.post('/', authenticate.verifyUserJwt, controller.addOne)
