@@ -29,4 +29,10 @@ config.limit = {
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers,
 }
 
+config.roles = {
+    customer: 'CUSTOMER',
+    staff: 'STAFF',
+    admin: 'ADMIN'
+}
+
 module.exports = config

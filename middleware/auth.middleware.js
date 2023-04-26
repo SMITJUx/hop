@@ -7,6 +7,7 @@ const User = require('../models/auth/user.model')
 const config = require('../config')
 
 const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
+const roles = config.roles
 
 const jwtAccessTokenCookieExtractor = function (req) {
     let accessToken = null
@@ -75,7 +76,7 @@ exports.jwtAdminStrategy = new JwtStrategy(
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, roles: 'ADMIN' }, (err, user) => {
+        User.findOne({ _id: jwt_payload._id, roles: roles.customer }, (err, user) => {
             if (err) {
                 return done(err, false)
             } else if (user) {
