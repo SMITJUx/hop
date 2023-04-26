@@ -3,16 +3,13 @@ const router = express.Router()
 const authenticate = require('../../middleware/auth.middleware')
 const controller = require('../../controllers/auth/auth.controller')
 
-/* POST register. */
-router.post('/register', controller.register)
+/* POST to register a user. */
+router.post('/', controller.register)
 
-/* POST login. */
-router.post('/login', authenticate.verifyUserLocal, controller.login)
+/* GET to login a user. */
+router.get('/', authenticate.verifyUserLocal, controller.login)
 
-/* POST refresh JWT tokens. */
-router.post('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
-
-/* GET list of users. */
-router.get('/list', authenticate.verifyUserJwt, controller.users)
+/* GET refresh JWT tokens. */
+router.get('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
 
 module.exports = router

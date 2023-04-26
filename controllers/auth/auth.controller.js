@@ -63,20 +63,7 @@ const controller = {
             success: true,
             status: 'You have successfully refreshed your JWT access token!',
         })
-    },
-
-    users: async function (req, res, next) {
-        await User.find({})
-            .then(
-                (users) => {
-                    res.statusCode = 200
-                    res.setHeader('Content-Type', 'application/json')
-                    res.json(users)
-                },
-                (err) => next(err),
-            )
-            .catch((err) => next(err))
-    },
+    }
 }
 
 module.exports = controller
