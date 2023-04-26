@@ -79,8 +79,6 @@ const controller = {
                 params.cabinClass = req.body.cabinClass
             }
 
-            console.log('params = ', params)
-
             const travel = new Travel(params)
             await travel.save()
             res.statusCode = 200
@@ -127,12 +125,12 @@ const controller = {
                 travel.cabinClass,
             )
             if (response.data.success) {
-                const { best, cheapest, fastest, direct } = api.parseResponse(response.data.data)
+                const { best, cheapest, fastest } = api.parseResponse(response.data.data, !!travel.returnDate)
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
                 res.json({
                     success: true,
-                    data: { best, cheapest, fastest, direct },
+                    data: { best, cheapest, fastest },
                 })
             } else {
                 res.status(404).send(response.data.data)
