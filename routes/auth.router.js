@@ -129,5 +129,6 @@ router.post('/register', controller.register)
  *         description: Internal server error
  */
 router.get('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
+router.get('/logout', authenticate.verifyUserJwt, controller.logout)
 
 module.exports = router
