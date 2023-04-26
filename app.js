@@ -13,6 +13,7 @@ const usersRouter = require('./routes/users.router')
 const travelsRouter = require('./routes/travels.router')
 const authenticate = require('./middleware/auth.middleware')
 const User = require('./models/user.model')
+const config = require('./config')
 
 const app = express()
 
@@ -20,7 +21,11 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(cors())
+app.use(
+    cors({
+        origin: config.cors.ALLOW_ORIGINS,
+    }),
+)
 app.use(helmet())
 app.use(rateLimit)
 app.use(passport.initialize())

@@ -32,7 +32,11 @@ config.limit = {
 config.roles = {
     customer: 'CUSTOMER',
     staff: 'STAFF',
-    admin: 'ADMIN'
+    admin: 'ADMIN',
+}
+
+config.cors = {
+    ALLOW_ORIGINS: ['https://wwww.hophop.world', 'http://localhost:300'],
 }
 
 module.exports = config
