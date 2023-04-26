@@ -69,15 +69,17 @@ const controller = {
                 departureDate: req.body.departureDate,
             }
 
-            if (req.params.returnDate) {
-                params.returnDate = req.params.returnDate
+            if (req.body.returnDate) {
+                params.returnDate = req.body.returnDate
             }
-            if (req.params.numberOfAdults) {
-                params.numberOfAdults = req.params.numberOfAdults
+            if (req.body.numberOfAdults) {
+                params.numberOfAdults = req.body.numberOfAdults
             }
-            if (req.params.cabinClass) {
-                params.cabinClass = req.params.cabinClass
+            if (req.body.cabinClass) {
+                params.cabinClass = req.body.cabinClass
             }
+
+            console.log('params = ', params)
 
             const travel = new Travel(params)
             await travel.save()
@@ -113,7 +115,7 @@ const controller = {
             if (!travel) {
                 res.status(404).json({
                     success: false,
-                    message: 'Travel not found ...'
+                    message: 'Travel not found ...',
                 })
             }
             const response = await api.getBestFlights(
