@@ -7,5 +7,5 @@ exports.rateLimit = rateLimit({
     windowMs: limitConfig.windowMs,
     max: limitConfig.max,
     standardHeaders: limitConfig.standardHeaders,
-    legacyHeaders: limitConfig.legacyHeaders
+    legacyHeaders: limitConfig.legacyHeaders,
 })

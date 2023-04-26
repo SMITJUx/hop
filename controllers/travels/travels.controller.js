@@ -65,7 +65,7 @@ const controller = {
         }
     },
 
-    bestFlights: async function (req, res, next) {
+    getBestFlights: async function (req, res, next) {
         try {
             const response = await api.getBestFlights(
                 req.body.adults,
