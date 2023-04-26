@@ -76,7 +76,7 @@ exports.jwtAdminStrategy = new JwtStrategy(
         secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, roles: roles.customer }, (err, user) => {
+        User.findOne({ _id: jwt_payload._id, roles: roles.admin }, (err, user) => {
             if (err) {
                 return done(err, false)
             } else if (user) {
