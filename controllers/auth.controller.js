@@ -7,6 +7,11 @@ const config = require('../config')
 const controller = {
     login: async function (req, res, next) {
         try {
+            if (req.user.revoked) {
+                res.status(401).send('This account is banned!')
+                return
+            }
+
             const accessToken = authenticate.getAccessToken({ _id: req.user._id })
             const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
@@ -66,7 +71,6 @@ const controller = {
             let token = await RefreshToken.findOne({ userId: req.user.id, value: refreshToken })
 
             if (token) {
-                console.log('Token found!')
                 if (token.revoked) {
                     const user = await User.findOne({ _id: req.user.id })
                     if (user) {
