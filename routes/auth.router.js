@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const body = require('express-validator').body
 const authenticate = require('../middleware/auth.middleware')
 const controller = require('../controllers/auth.controller')
 
@@ -55,12 +56,20 @@ const controller = require('../controllers/auth.controller')
  *                   type: boolean
  *                 status:
  *                   type: string
+ *       400:
+ *         description: Bad request
  *       401:
  *         description: Cannot log in based on the authentication data, wrong data or banned user
  *       500:
  *         description: Internal server error
  */
-router.post('/login', authenticate.verifyUserLocal, controller.login)
+router.post(
+    '/login',
+    body('username').isLength({ min: 3, max: 10 }).isAlphanumeric(),
+    body('password').isLength({ min: 5, max: 20 }),
+    authenticate.verifyUserLocal,
+    controller.login,
+)
 
 /**
  * @swagger
@@ -96,12 +105,20 @@ router.post('/login', authenticate.verifyUserLocal, controller.login)
  *                   type: boolean
  *                 status:
  *                   type: string
+ *       400:
+ *         description: Bad request
  *       401:
  *         description: An error occurred during user creation, contact the administrator
  *       500:
  *         description: Internal server error
  */
-router.post('/register', controller.register)
+router.post(
+    '/register',
+    body('username').isLength({ min: 3, max: 10 }).isAlphanumeric(),
+    body('email').isEmail(),
+    body('password').isLength({ min: 5, max: 20 }).isStrongPassword(),
+    controller.register,
+)
 
 /**
  * @swagger

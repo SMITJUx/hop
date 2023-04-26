@@ -1,4 +1,5 @@
 const passport = require('passport')
+const validationResult = require('express-validator').validationResult
 const authenticate = require('../middleware/auth.middleware')
 const User = require('../models/user.model')
 const RefreshToken = require('../models/refreshToken.model')
@@ -7,8 +8,20 @@ const config = require('../config')
 const controller = {
     login: async function (req, res, next) {
         try {
+            const errors = validationResult(req)
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    success: false,
+                    errors: errors.array(),
+                })
+            }
+
             if (req.user.revoked) {
-                res.status(401).send('This account is banned!')
+                res.status(401).json({
+                    success: false,
+                    message: 'This account is banned!',
+                })
                 return
             }
 
@@ -33,6 +46,14 @@ const controller = {
 
     register: async function (req, res, next) {
         try {
+            const errors = validationResult(req)
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    success: false,
+                    errors: errors.array(),
+                })
+            }
             await User.register(
                 new User({ username: req.body.username, email: req.body.email }),
                 req.body.password,
@@ -66,9 +87,10 @@ const controller = {
                     user.revoked = Date.now()
                     await user.save()
                 }
-                res.status(401).send(
-                    "You are using a used JWT token, it's suspicious, your account is banned.",
-                )
+                res.status(401).json({
+                    success: false,
+                    message: "You are using a used JWT token, it's suspicious, your account is banned.",
+                })
                 return
             }
 
@@ -107,9 +129,10 @@ const controller = {
                     user.revoked = Date.now()
                     await user.save()
                 }
-                res.status(401).send(
-                    "You are using a used JWT token, it's suspicious, your account is banned.",
-                )
+                res.status(401).json({
+                    success: false,
+                    message: "You are using a used JWT token, it's suspicious, your account is banned.",
+                })
                 return
             }
 

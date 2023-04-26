@@ -1,3 +1,4 @@
+const validationResult = require('express-validator').validationResult
 const Travel = require('../models/travel.model')
 const api = require('../api/flightlabs.api')
 const date = require('../utils/dates.util')
@@ -52,6 +53,15 @@ const controller = {
 
     addOne: async function (req, res, next) {
         try {
+            const errors = validationResult(req)
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    success: false,
+                    errors: errors.array(),
+                })
+            }
+
             const params = {
                 userId: req.user.id,
                 origin: req.body.origin,
@@ -101,7 +111,10 @@ const controller = {
         try {
             const travel = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
             if (!travel) {
-                res.status(404).send('Travel not found ...')
+                res.status(404).json({
+                    success: false,
+                    message: 'Travel not found ...'
+                })
             }
             const response = await api.getBestFlights(
                 travel.numberOfAdults,
