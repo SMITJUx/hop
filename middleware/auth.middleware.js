@@ -8,16 +8,6 @@ const config = require('../config')
 
 const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
 
-exports.getAccessToken = function (user) {
-    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
-}
-
-exports.getRefreshToken = function (user) {
-    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
-}
-
-exports.localStrategy = new LocalStrategy(User.authenticate())
-
 const jwtAccessTokenCookieExtractor = function (req) {
     let accessToken = null
     if (req && req.cookies) {
@@ -32,6 +22,16 @@ const jwtRefreshTokenCookieExtractor = function (req) {
     }
     return refreshToken
 }
+
+exports.getAccessToken = function (user) {
+    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
+}
+
+exports.getRefreshToken = function (user) {
+    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
+}
+
+exports.localStrategy = new LocalStrategy(User.authenticate())
 
 exports.jwtStrategy = new JwtStrategy(
     {
