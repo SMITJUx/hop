@@ -16,7 +16,7 @@ const controller = {
             const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
             const token = new RefreshToken({ userId: req.user.id, value: refreshToken })
-            token.save()
+            await token.save()
 
             res.statusCode = 200
             res.cookie('accessToken', accessToken, config.cookies)
@@ -64,7 +64,7 @@ const controller = {
                 const user = await User.findOne({ _id: req.user.id })
                 if (user) {
                     user.revoked = Date.now()
-                    user.save()
+                    await user.save()
                 }
                 res.status(401).send(
                     "You are using a used JWT token, it's suspicious, your account is banned.",
@@ -74,14 +74,14 @@ const controller = {
 
             if (token && !token.revoked) {
                 token.revoked = Date.now()
-                token.save()
+                await token.save()
             }
 
             const accessToken = authenticate.getAccessToken({ _id: req.user._id })
             refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
             token = new RefreshToken({ userId: req.user.id, value: refreshToken })
-            token.save()
+            await token.save()
 
             res.statusCode = 200
             res.cookie('accessToken', accessToken, config.cookies)

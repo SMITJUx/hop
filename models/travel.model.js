@@ -36,7 +36,7 @@ const TravelSchema = new mongoose.Schema(
         cabinClass: {
             type: String,
             enum: ['economy', 'premiumeconomy', 'business', 'first'],
-            default: ['economy'],
+            default: 'economy',
         },
     },
     { timestamps: true },

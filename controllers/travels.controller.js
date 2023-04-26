@@ -5,9 +5,14 @@ const controller = {
     getAll: async function (req, res, next) {
         try {
             const travels = await Travel.find({ userId: req.user.id })
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-            res.json(travels)
+
+            if (travels?.length) {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(travels)
+            } else {
+                res.status(204).send()
+            }
         } catch (err) {
             next(err)
         }
@@ -24,12 +29,12 @@ const controller = {
 
     getOne: async function (req, res, next) {
         try {
-            const travels = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
+            const travel = await Travel.findOne({ _id: req.params.id, userId: req.user.id })
 
-            if (travels) {
+            if (travel) {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(travels)
+                res.json(travel)
             } else {
                 res.status(404).send()
             }
@@ -40,12 +45,29 @@ const controller = {
 
     addOne: async function (req, res, next) {
         try {
-            const travel = new Travel({ userId: req.user.id, ...req.body })
-            travel.save()
+            const params = {
+                userId: req.user.id,
+                origin: req.params.origin,
+                destination: req.params.destination,
+                departureDate: req.params.departureDate,
+                returnDate: req.params.returnDate,
+            }
+
+            if (req.params.numberOfAdults) {
+                params.numberOfAdults = req.params.numberOfAdults
+            }
+            if (req.params.cabinClass) {
+                params.cabinClass = req.params.cabinClass
+            }
+
+            console.log('[LOG] WTF, we are still creating the travel: ', params)
+            const travel = new Travel(params)
+            await travel.save()
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.json(travel)
         } catch (err) {
+            console.log('[LOG] Exception caught: ', err)
             next(err)
         }
     },
@@ -75,15 +97,17 @@ const controller = {
                 req.body.returnDate,
                 req.body.cabinClass,
             )
-            const status = response.status
-            if (response.status) {
-                const data = response.data
+            if (response?.ok) {
+                if (!response.data.success) {
+                    res.status(404).send(response.data.data)
+                    return
+                }
+                const { best, cheapest, fastest, direct } = api.parseResponse(response.data.data)
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(data)
+                res.json({ best, cheapest, fastest, direct })
             } else {
-                // TODO
-                res.status(404).send()
+                res.status(404).send('Error while calling external flights API ...')
             }
         } catch (err) {
             next(err)
