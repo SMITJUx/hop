@@ -9,17 +9,17 @@ const controller = {
         const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
         res.statusCode = 200
-        res.cookie("accessToken", accessToken, {
+        res.cookie('accessToken', accessToken, {
             secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
-        res.cookie("refreshToken", refreshToken, {
+        res.cookie('refreshToken', refreshToken, {
             secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
         res.setHeader('Content-Type', 'application/json')
         res.json({
@@ -52,11 +52,11 @@ const controller = {
         const accessToken = authenticate.getAccessToken({ _id: req.user._id })
 
         res.statusCode = 200
-        res.cookie("accessToken", accessToken, {
+        res.cookie('accessToken', accessToken, {
             secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
-            maxAge: 604800000 // 7 days
+            maxAge: 604800000, // 7 days
         })
         res.setHeader('Content-Type', 'application/json')
         res.json({
