@@ -35,8 +35,17 @@ config.roles = {
     admin: 'ADMIN',
 }
 
-config.cors = {
-    ALLOW_ORIGINS: ['https://wwww.hophop.world', 'http://localhost:300'],
+config.whitelist = ['https://wwww.hophop.world', 'http://localhost:3000']
+config.corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || config.whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS.'))
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    optionsSuccessStatus: 200,
 }
 
 module.exports = config
