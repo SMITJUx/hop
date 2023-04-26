@@ -69,6 +69,25 @@ exports.jwtRefreshStrategy = new JwtStrategy(
     },
 )
 
+exports.jwtAdminStrategy = new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
+        secretOrKey: accessTokenPrivateKey,
+    },
+    (jwt_payload, done) => {
+        User.findOne({ _id: jwt_payload._id, roles: 'ADMIN' }, (err, user) => {
+            if (err) {
+                return done(err, false)
+            } else if (user) {
+                return done(null, user)
+            } else {
+                return done(null, false)
+            }
+        })
+    },
+)
+
 exports.verifyUserLocal = passport.authenticate('local', { session: false })
 exports.verifyUserJwt = passport.authenticate('jwt', { session: false })
 exports.verifyUserJwtRefresh = passport.authenticate('jwt-refresh', { session: false })
+exports.verifyUserAdminJwt = passport.authenticate('jwt-admin', { session: false })
