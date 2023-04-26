@@ -1,5 +1,5 @@
-const Travel = require('../../models/travels/travel.model')
-const api = require('../../api/flightlabs.api')
+const Travel = require('../models/travels/travel.model')
+const api = require('../api/flightlabs.api')
 
 const controller = {
     getAll: async function (req, res, next) {
@@ -65,7 +65,7 @@ const controller = {
         }
     },
 
-    bestFlights: async function (req, res, next) {
+    getBestFlights: async function (req, res, next) {
         try {
             const response = await api.getBestFlights(
                 req.body.adults,
@@ -73,7 +73,7 @@ const controller = {
                 req.body.destination,
                 req.body.departureDate,
                 req.body.returnDate,
-                req.body.cabinClass
+                req.body.cabinClass,
             )
             const status = response.status
             if (response.status) {
@@ -81,12 +81,11 @@ const controller = {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
                 res.json(data)
-            }
-            else {
+            } else {
                 // TODO
                 res.status(404).send()
             }
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     },

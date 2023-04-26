@@ -6,19 +6,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/auth/user.model')
 const config = require('../config')
 
-const {
-    auth: { accessTokenPrivateKey, refreshTokenPrivateKey },
-} = config.params
-
-exports.getAccessToken = function (user) {
-    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
-}
-
-exports.getRefreshToken = function (user) {
-    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
-}
-
-exports.localStrategy = new LocalStrategy(User.authenticate())
+const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
 
 const jwtAccessTokenCookieExtractor = function (req) {
     let accessToken = null
@@ -34,6 +22,16 @@ const jwtRefreshTokenCookieExtractor = function (req) {
     }
     return refreshToken
 }
+
+exports.getAccessToken = function (user) {
+    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
+}
+
+exports.getRefreshToken = function (user) {
+    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
+}
+
+exports.localStrategy = new LocalStrategy(User.authenticate())
 
 exports.jwtStrategy = new JwtStrategy(
     {

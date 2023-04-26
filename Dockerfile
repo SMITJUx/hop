@@ -2,7 +2,7 @@ FROM node:alpine
 
 # Set image metadata
 LABEL version="1.0"
-LABEL description="Flight delay node.js app"
+LABEL description="Find the best flights!"
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,7 +14,7 @@ RUN npm cache clean --force && npm ci
 # Copy app source to image
 COPY . .
 
-# Set application PORT and expose docker PORT, 80 is what Elastic Beanstalk expects
+# Set application PORT and expose docker PORT
 EXPOSE 3000
 
 CMD [ "npm", "run", "start" ]

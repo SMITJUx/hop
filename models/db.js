@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('../config')
 
-const {
-    db: { host, port, name, user, password },
-} = config.params
+const { host, port, name, user, password } = config.db
 
 mongoose.set('strictQuery', true)
 mongoose.connect(`mongodb://${user}:${password}@${host}:${port}/${name}`, {
