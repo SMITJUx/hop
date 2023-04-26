@@ -46,7 +46,7 @@ config.roles = {
     admin: 'ADMIN',
 }
 
-config.whitelist = ['https://wwww.hophop.world', 'http://localhost:3000']
+config.whitelist = ['https://www.hophop.world', 'http://localhost:3000']
 
 config.corsOptions = {
     origin: function (origin, callback) {
