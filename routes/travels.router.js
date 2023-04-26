@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const body = require('express-validator').body
 const authenticate = require('../middleware/auth.middleware')
 const controller = require('../controllers/travels.controller')
 
@@ -92,12 +93,24 @@ router.get('/', authenticate.verifyUserJwt, controller.getAll)
  *                   type: boolean
  *                 data:
  *                   $ref: '#/components/schemas/Travel'
+ *       400:
+ *         description: Bad request
  *       401:
  *         description: Cannot authorize access to this endpoint
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate.verifyUserJwt, controller.addOne)
+router.post(
+    '/',
+    body('numberOfAdults').isInt({ min: 1, max: 8 }).optional(),
+    body('origin').isAlpha().isUppercase().isLength({ min: 3, max: 3 }),
+    body('destination').isAlpha().isUppercase().isLength({ min: 3, max: 3 }),
+    body('departureDate').isISO8601().toDate().isAfter(new Date().toISOString()),
+    body('returnedDated').isISO8601().toDate().isAfter(new Date().toISOString()).optional(), // TODO: check if is after departure date
+    body('cabinClass').isIn(['economy', 'premiumeconomy', 'business', 'first']).optional(),
+    authenticate.verifyUserJwt,
+    controller.addOne,
+)
 
 /**
  * @swagger
