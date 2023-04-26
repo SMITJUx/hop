@@ -73,3 +73,58 @@ git push -f                         # Force push your rebased branch
 ```
 
 Your `Merge Request` will then be reviewed before being merged in the `develop` branch.
+
+## Development Setup
+
+### Pre-requisites
+
+To run this API locally, you only need to have Docker and Docker Compose!
+
+### Getting Started
+
+-   Clone the repository
+
+```bash
+git clone  <repository_url> <project_name>
+```
+
+-   Set a `.env` file in the root of the project
+
+```bash
+cd <project_name>
+touch .env
+```
+
+-   Set your environment variables in the `.env` file, here you can find an example!
+
+```bash
+# Set project environnement to dev since it will be locally.
+NODE_ENV=dev
+
+# App settings.
+PORT=3000
+
+# MongoDB connection settings.
+DB_HOST=mongo
+DB_PORT=27017
+DB_NAME=mydb
+DB_USER=myuser
+DB_PASSWORD=mypassword
+ROOT_DB_USERNAME=myroot
+ROOT_DB_PASSWORD=myroot
+
+# Authentication key pair used for JWT tokens (use a random base64 string generator to make these keys).
+ACCESS_TOKEN_PRIVATE_KEY=IL/a1vaS5Kdtrx2uS/hYUQ==
+REFRESH_TOKEN_PRIVATE_KEY=ZiCmksTdwzs3K9Jc0rR70g==
+
+# Flight API.
+BASE_URL=https://app.goflightlabs.com
+# Get your own API key on FlightLabs.
+API_KEY=XwrLBcRopx8_Bd9BVLuFC7EE0jb9gZku3XouhAV8I90FPeaq8CdqSgsq1yJanT6-ZHz7dAzNoSyQp0-je_SadCb4amRRqBd-8RnL3O0tAtIV_hGiXTZj
+```
+
+-   Build and run the project
+
+```bash
+docker-compose up --force-recreate --build
+```
