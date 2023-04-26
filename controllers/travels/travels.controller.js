@@ -75,10 +75,17 @@ const controller = {
                 req.body.returnDate,
                 req.body.cabinClass
             )
-            const data = response.data
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-            res.json(data)
+            const status = response.status
+            if (response.status) {
+                const data = response.data
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(data)
+            }
+            else {
+                // TODO
+                res.status(404).send()
+            }
         } catch(err) {
             next(err)
         }
