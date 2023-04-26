@@ -8,6 +8,8 @@ const logger = require('morgan')
 const passport = require('passport')
 const helmet = require('helmet')
 const cors = require('cors')
+const swaggerJsdoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
 const authRouter = require('./routes/auth.router')
 const usersRouter = require('./routes/users.router')
@@ -17,6 +19,7 @@ const User = require('./models/user.model')
 const config = require('./config')
 
 const app = express()
+const specs = swaggerJsdoc(config.swagger)
 
 app.use(favicon(__dirname + '/public/favicon.png'))
 app.use(logger('dev'))
@@ -38,9 +41,8 @@ passport.use('jwt-admin', authenticate.jwtAdminStrategy)
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/travels', travelsRouter)
-app.get('/', (req, res) => {
-    res.send('Hello world')
-})
+app.use(['/api/docs', '/api', '/'], swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }))
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))

@@ -10,7 +10,10 @@ const controller = {
             if (travels?.length) {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(travels)
+                res.json({
+                    success: true,
+                    data: travels,
+                })
             } else {
                 res.status(204).send()
             }
@@ -35,7 +38,10 @@ const controller = {
             if (travel) {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json(travel)
+                res.json({
+                    success: true,
+                    data: travel,
+                })
             } else {
                 res.status(404).send()
             }
@@ -67,7 +73,10 @@ const controller = {
             await travel.save()
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.json(travel)
+            res.json({
+                success: true,
+                data: travel,
+            })
         } catch (err) {
             next(err)
         }
@@ -106,7 +115,10 @@ const controller = {
                 const { best, cheapest, fastest, direct } = api.parseResponse(response.data.data)
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
-                res.json({ best, cheapest, fastest, direct })
+                res.json({
+                    success: true,
+                    data: { best, cheapest, fastest, direct },
+                })
             } else {
                 res.status(404).send(response.data.data)
             }

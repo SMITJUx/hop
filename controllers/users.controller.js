@@ -6,7 +6,10 @@ const controller = {
             const me = req.user
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.json(me)
+            res.json({
+                success: true,
+                data: me,
+            })
         } catch (err) {
             next(err)
         }
@@ -17,7 +20,10 @@ const controller = {
             const user = await User.find({ username: req.params.username })
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.json(user)
+            res.json({
+                success: true,
+                data: user,
+            })
         } catch (err) {
             next(err)
         }
