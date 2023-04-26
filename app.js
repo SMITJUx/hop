@@ -41,7 +41,14 @@ passport.use('jwt-admin', authenticate.jwtAdminStrategy)
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/travels', travelsRouter)
-app.use(['/api/docs', '/api', '/'], swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }))
+app.use(
+    ['/api/docs', '/api', '/'],
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerJsdoc(config.swagger), {
+        explorer: true,
+        customfavIcon: __dirname + '/public/favicon.png',
+    }),
+)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
