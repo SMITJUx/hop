@@ -56,7 +56,7 @@ const controller = require('../controllers/auth.controller')
  *                 status:
  *                   type: string
  *       401:
- *          description: Cannot log in based on the authentication data, wrong data or banned user
+ *         description: Cannot log in based on the authentication data, wrong data or banned user
  *       500:
  *         description: Internal server error
  */
@@ -97,7 +97,7 @@ router.post('/login', authenticate.verifyUserLocal, controller.login)
  *                 status:
  *                   type: string
  *       401:
- *          description: An error occurred during user creation, contact the administrator
+ *         description: An error occurred during user creation, contact the administrator
  *       500:
  *         description: Internal server error
  */
@@ -124,7 +124,7 @@ router.post('/register', controller.register)
  *                 status:
  *                   type: string
  *       401:
- *          description: Cannot authorize access to this endpoint
+ *         description: Cannot authorize access to this endpoint
  *       500:
  *         description: Internal server error
  */

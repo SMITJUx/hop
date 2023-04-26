@@ -31,7 +31,7 @@ const controller = require('../controllers/users.controller')
  *                 data:
  *                   $ref: '#/components/schemas/user'
  *       401:
- *          description: Cannot authorize access to this endpoint
+ *         description: Cannot authorize access to this endpoint
  *       500:
  *         description: Internal server error
  */
@@ -65,7 +65,7 @@ router.get('/me', authenticate.verifyUserJwt, controller.getMe)
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       401:
- *          description: Cannot authorize access to this endpoint
+ *         description: Cannot authorize access to this endpoint
  *       500:
  *         description: Internal server error
  */
