@@ -1,0 +1,44 @@
+stages:
+    - check
+    - build
+
+workflow:
+    rules:
+        - if: 
+            $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
+        - if: 
+            $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+        - if: 
+            $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature\//
+        - if: 
+            $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "develop"
+
+cache:
+    # This folder is cached between builds
+    # https://docs.gitlab.com/ee/ci/yaml/index.html#cache
+    paths:
+        - node_modules/
+
+test:
+    stage: check
+    image: node:alpine
+    script:
+        - npm ci --silent
+        - npm run test
+
+lint:
+    stage: check
+    image: node:alpine
+    script:
+        - npm ci --silent
+        - npm run lint
+
+build:
+    stage: build
+    image: docker:latest
+    services:
+        - docker:dind
+    script:
+        - apk add --no-cache docker-compose
+        - docker-compose down
+        - docker-compose build

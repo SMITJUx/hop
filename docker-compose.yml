@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+    back:
+        container_name: hop
+        build: .
+        ports:
+            - '3000:3000'
+        depends_on:
+            - mongo
+    mongo:
+        container_name: mongo
+        image: mongo:latest
+        restart: always
+        volumes:
+            - data-volume:/data/db
+volumes:
+    data-volume:
