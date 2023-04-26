@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const config = require('../config').auth
+const expireIn = require('../config').auth.expireIn
 
 const RefreshTokenSchema = new mongoose.Schema(
     {
@@ -15,6 +15,11 @@ const RefreshTokenSchema = new mongoose.Schema(
         revoked: {
             type: Date,
             default: null,
+        },
+        createdAt: {
+            type: Date,
+            expires: expireIn.refreshToken,
+            default: Date.now,
         },
     },
     { timestamps: true },
