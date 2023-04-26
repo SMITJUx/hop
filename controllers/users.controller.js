@@ -14,7 +14,7 @@ const controller = {
 
     getUser: async function (req, res, next) {
         try {
-            const user = await User.findById(req.params.id)
+            const user = await User.find({ username: req.params.username })
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.json(user)
