@@ -13,7 +13,71 @@ Users can register for an account and log in to search for flights from an origi
 - [Technologies](#Technologies)
 - [Contributing](#contributing)
 
-## Routes
+# Pre-requisites
+
+Install Node.js, Docker and MongoDB
+
+
+# Getting started
+
+
+- Clone the repository 
+```bash
+git clone  <git lab template url> <project_name>
+```
+- Install dependencies
+```bash
+cd <project_name>
+npm install
+```
+- Build and run the project
+
+```bash
+npm run
+```
+- Activate docker 
+```bash
+docker-compose up 
+```
+
+
+# Test and Deploy
+
+
+We have used the built-in continuous integration in GitLab.
+
+- [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
+- [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
+- [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+
+
+ 
+# Technologies 
+### Backend
+- Node.js 
+- Express 
+
+### Database  
+- MongoDB
+#### Security 
+- HTTPS
+- Passport.js (JWT)
+- Helmet
+- CORS
+- Rate Limit  
+
+### Containerization
+- Docker 
+
+# Features 
+ - Register an account 
+ - Login to an account 
+ - Refresh a token 
+ - Search a travel 
+ - Get all your travel search
+ - Delete travels or a specific travel 
+
+# Routes
 
 ### Authentication
 
@@ -41,3 +105,12 @@ Users can register for an account and log in to search for flights from an origi
 | **GET**    | **/api/travels/:id**              | Get a specific travel.          |
 | **DELETE** | **/api/travels/:id**              | Delete a specific travel.       |
 | **GET**    | **/api/travels/best-flights/:id** | Find best flights for a travel. |
+
+# Contributing
+
+## License
+- MIT License
+
+## Authors 
+- Samir Jout 
+- Sabrina Sandirasegarane
