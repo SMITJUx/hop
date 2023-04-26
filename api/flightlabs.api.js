@@ -9,7 +9,7 @@ exports.getBestFlights = async (
     returnDate,
     cabinClass,
 ) => {
-    console.log("[BEST FLIGHTS] Starting inside ...")
+    console.log('[BEST FLIGHTS] Starting inside ...')
     return axios.get(config.params.api.baseUrl + '/search-best-flights', {
         params: {
             access_key: config.params.api.key,
@@ -21,7 +21,7 @@ exports.getBestFlights = async (
             cabinClass,
         },
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+        },
     })
 }

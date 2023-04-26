@@ -63,7 +63,7 @@ const controller = {
             success: true,
             status: 'You have successfully refreshed your JWT access token!',
         })
-    }
+    },
 }
 
 module.exports = controller

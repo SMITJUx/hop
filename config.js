@@ -8,7 +8,7 @@ const dev = {
         port: parseInt(process.env.DB_PORT) || 27017,
         name: process.env.DB_NAME || 'db',
         user: process.env.DB_USER || '',
-        password: process.env.DB_PASSWORD || ''
+        password: process.env.DB_PASSWORD || '',
     },
     auth: {
         accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY || '',
@@ -16,8 +16,8 @@ const dev = {
     },
     api: {
         baseUrl: process.env.BASE_URL || '',
-        key: process.env.DEV_API_KEY || ''
-    }
+        key: process.env.DEV_API_KEY || '',
+    },
 }
 
 const prod = {
@@ -26,7 +26,7 @@ const prod = {
         port: parseInt(process.env.DB_PORT) || 27017,
         name: process.env.DB_NAME || 'db',
         user: process.env.DB_USER || '',
-        password: process.env.DB_PASSWORD || ''
+        password: process.env.DB_PASSWORD || '',
     },
     auth: {
         accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY || '',
@@ -34,13 +34,13 @@ const prod = {
     },
     api: {
         baseUrl: process.env.BASE_URL || '',
-        key: process.env.API_KEY || ''
-    }
+        key: process.env.API_KEY || '',
+    },
 }
 
 const config = {
     dev,
-    prod
+    prod,
 }
 
 module.exports = {

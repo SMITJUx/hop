@@ -81,4 +81,3 @@ deploy:
         - apk add --no-cache docker-compose
         - docker-compose up --force-recreate --build -d
         - docker image prune -f
-

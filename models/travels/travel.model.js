@@ -11,33 +11,33 @@ const TravelSchema = new mongoose.Schema(
             type: Number,
             min: 1,
             max: 8,
-            default: 1
+            default: 1,
         },
         origin: {
             type: String,
             minLength: 3,
             maxLength: 3,
-            required: true
+            required: true,
         },
         destination: {
             type: String,
             minLength: 3,
             maxLength: 3,
-            required: true
+            required: true,
         },
         departureDate: {
             type: Date,
-            required: true
+            required: true,
         },
         returnDate: {
             type: Date,
-            required: true
+            required: true,
         },
         cabinClass: {
             type: String,
             enum: ['economy', 'premiumeconomy', 'business', 'first'],
             default: ['economy'],
-        }
+        },
     },
     { timestamps: true },
 )
