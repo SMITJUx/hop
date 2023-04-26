@@ -6,7 +6,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/auth/user.model')
 const config = require('../config')
 
-const { auth: { accessTokenPrivateKey, refreshTokenPrivateKey } } = config.auth
+const { accessTokenPrivateKey, refreshTokenPrivateKey } = config.auth
 
 exports.getAccessToken = function (user) {
     return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
