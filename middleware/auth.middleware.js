@@ -9,14 +9,38 @@ const config = require('../config')
 const { accessTokenPrivateKey, refreshTokenPrivateKey, expireIn } = config.auth
 const roles = config.roles
 
-exports.jwtAccessTokenCookieExtractor = function (req) {
+const verify = (jwt_payload, done) => {
+    User.findOne({ _id: jwt_payload._id, revoked: null }, (err, user) => {
+        if (err) {
+            return done(err, false)
+        } else if (user) {
+            return done(null, user)
+        } else {
+            return done(null, false)
+        }
+    })
+}
+const verifyAdmin = (jwt_payload, done) => {
+    User.findOne({ _id: jwt_payload._id, roles: roles.admin, revoked: null }, (err, user) => {
+        if (err) {
+            return done(err, false)
+        } else if (user) {
+            return done(null, user)
+        } else {
+            return done(null, false)
+        }
+    })
+
+}
+
+exports.jwtAccessTokenCookieExtractor = (req) => {
     let accessToken = null
     if (req && req.cookies) {
         accessToken = req.cookies['accessToken']
     }
     return accessToken
 }
-exports.jwtRefreshTokenCookieExtractor = function (req) {
+exports.jwtRefreshTokenCookieExtractor = (req) => {
     let refreshToken = null
     if (req && req.cookies) {
         refreshToken = req.cookies['refreshToken']
@@ -24,11 +48,11 @@ exports.jwtRefreshTokenCookieExtractor = function (req) {
     return refreshToken
 }
 
-exports.getAccessToken = function (user) {
+exports.getAccessToken = (user) => {
     return jwt.sign(user, accessTokenPrivateKey, { expiresIn: expireIn.accessToken })
 }
 
-exports.getRefreshToken = function (user) {
+exports.getRefreshToken = (user) => {
     return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: expireIn.refreshToken })
 }
 
@@ -39,17 +63,7 @@ exports.jwtStrategy = new JwtStrategy(
         jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtAccessTokenCookieExtractor]),
         secretOrKey: accessTokenPrivateKey,
     },
-    (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, revoked: null }, (err, user) => {
-            if (err) {
-                return done(err, false)
-            } else if (user) {
-                return done(null, user)
-            } else {
-                return done(null, false)
-            }
-        })
-    },
+    verify,
 )
 
 exports.jwtRefreshStrategy = new JwtStrategy(
@@ -57,17 +71,7 @@ exports.jwtRefreshStrategy = new JwtStrategy(
         jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtRefreshTokenCookieExtractor]),
         secretOrKey: refreshTokenPrivateKey,
     },
-    (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, revoked: null }, (err, user) => {
-            if (err) {
-                return done(err, false)
-            } else if (user) {
-                return done(null, user)
-            } else {
-                return done(null, false)
-            }
-        })
-    },
+    verify,
 )
 
 exports.jwtAdminStrategy = new JwtStrategy(
@@ -75,17 +79,7 @@ exports.jwtAdminStrategy = new JwtStrategy(
         jwtFromRequest: ExtractJwt.fromExtractors([exports.jwtAccessTokenCookieExtractor]),
         secretOrKey: accessTokenPrivateKey,
     },
-    (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload._id, roles: roles.admin, revoked: null }, (err, user) => {
-            if (err) {
-                return done(err, false)
-            } else if (user) {
-                return done(null, user)
-            } else {
-                return done(null, false)
-            }
-        })
-    },
+    verifyAdmin,
 )
 
 exports.verifyUserLocal = passport.authenticate('local', { session: false })
