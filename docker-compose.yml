@@ -10,8 +10,15 @@ services:
     mongo:
         container_name: mongo
         image: mongo:latest
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${ROOT_DB_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${ROOT_DB_PASSWORD}
+            MONGO_INITDB_DATABASE: ${DEV_DB_NAME}
+            MONGO_DB_USER: ${DEV_DB_USER}
+            MONGO_DB_PASSWORD: ${DEV_DB_PASSWORD}
         restart: always
         volumes:
             - data-volume:/data/db
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 volumes:
     data-volume:
