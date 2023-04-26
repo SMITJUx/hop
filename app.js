@@ -8,6 +8,8 @@ const logger = require('morgan')
 const passport = require('passport')
 const helmet = require('helmet')
 const cors = require('cors')
+const swaggerJsdoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
 const authRouter = require('./routes/auth.router')
 const usersRouter = require('./routes/users.router')
@@ -18,6 +20,35 @@ const config = require('./config')
 
 const app = express()
 
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'hop API',
+            version: '0.1.0',
+            description: 'Simple API to find the best flights for your travels!',
+            license: {
+                name: 'MIT',
+                url: 'https://spdx.org/licenses/MIT.html',
+            },
+            contact: {
+                name: 'Samir J.',
+                email: '0xPark@proton.me',
+            },
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+            },
+            {
+                url: 'https://hophop.world',
+            },
+        ],
+    },
+    apis: ['./routes/*.js', './models/*.js'],
+}
+
+const specs = swaggerJsdoc(options)
 app.use(favicon(__dirname + '/public/favicon.png'))
 app.use(logger('dev'))
 app.use(express.json())
@@ -38,9 +69,8 @@ passport.use('jwt-admin', authenticate.jwtAdminStrategy)
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/travels', travelsRouter)
-app.get('/', (req, res) => {
-    res.send('Hello world')
-})
+app.use(['/api/docs', '/api', '/'], swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }))
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
