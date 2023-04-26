@@ -96,7 +96,7 @@ const controller = {
         }
     },
 
-    logout: async (req, res, next) => {
+    revoke: async (req, res, next) => {
         try {
             let refreshToken = authenticate.jwtRefreshTokenCookieExtractor(req)
             let token = await RefreshToken.findOne({ userId: req.user.id, value: refreshToken })

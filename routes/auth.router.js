@@ -132,15 +132,15 @@ router.get('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
 
 /**
  * @swagger
- * /api/auth/logout:
- *   get:
- *     summary: User logout with refresh token revoked
+ * /api/auth/revoke:
+ *   patch:
+ *     summary: Refresh token revocation
  *     tags: [Authentication]
  *     security:
  *       - cookieRefreshAuth: [ ]
  *     responses:
  *       200:
- *         description: User was successfully logged out
+ *         description: User refresh token was successfully revoked
  *         content:
  *           application/json:
  *             schema:
@@ -155,6 +155,6 @@ router.get('/refresh', authenticate.verifyUserJwtRefresh, controller.refresh)
  *       500:
  *         description: Internal server error
  */
-router.get('/logout', authenticate.verifyUserJwt, controller.logout)
+router.patch('/revoke', authenticate.verifyUserJwt, controller.revoke)
 
 module.exports = router
