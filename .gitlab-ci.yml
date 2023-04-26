@@ -1,13 +1,6 @@
 stages:
     - check
-    - build
-
-workflow:
-    rules:
-        - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
-        - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
-        - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
-        - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
+    - deploy
 
 cache:
     # This folder is cached between builds
@@ -17,6 +10,17 @@ cache:
 
 test:
     stage: check
+    only:
+        refs:
+            - /^feature\/*/
+            - merge_request
+            - develop
+            - master
+        variables:
+            - $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
+            - $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+            - $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+            - $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
     image: node:alpine
     script:
         - npm ci --silent
@@ -24,17 +28,59 @@ test:
 
 lint:
     stage: check
+    only:
+        refs:
+            - /^feature\/*/
+            - merge_request
+            - develop
+            - master
+        variables:
+            - $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
+            - $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+            - $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+            - $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
     image: node:alpine
     script:
         - npm ci --silent
         - npm run lint
 
-build:
-    stage: build
+deploy:
+    stage: deploy
+    only:
+        refs:
+            - merge_request
+            - develop
+            - master
+        variables:
+            - $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+            - $CI_MERGE_REQUEST_APPROVED && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
     image: docker:latest
     services:
         - docker:dind
     script:
+        - apk update
+        - apk add bash
+        # Set HTTPS certificates
+        - cat $LOCALHOST_PEM >> ${CI_PROJECT_DIR}/bin/localhost.pem
+        - cat $LOCALHOST_KEY_PEM >> ${CI_PROJECT_DIR}/bin/localhost-key.pem
+        # Set project environnement.
+        - echo "NODE_ENV=$NODE_ENV" >> .env
+        # App settings.
+        - echo "PORT=$PORT" >> .env
+        # MongoDB connection settings.
+        - echo "DEV_DB_HOST=$DEV_DB_HOST" >> .env
+        - echo "DEV_DB_PORT=$DEV_DB_PORT" >> .env
+        - echo "DEV_DB_NAME=$DEV_DB_NAME" >> .env
+        - echo "DEV_DB_USER=$DEV_DB_USER" >> .env
+        - echo "DEV_DB_PASSWORD=$DEV_DB_PASSWORD" >> .env
+        - echo "ROOT_DB_USERNAME=$ROOT_DB_USERNAME" >> .env
+        - echo "ROOT_DB_PASSWORD=$ROOT_DB_PASSWORD" >> .env
+        # Authentication key pair used for JWT tokens.
+        - echo "ACCESS_TOKEN_PRIVATE_KEY=$ACCESS_TOKEN_PRIVATE_KEY" >> .env
+        - echo "REFRESH_TOKEN_PRIVATE_KEY=$REFRESH_TOKEN_PRIVATE_KEY" >> .env
+        # Flight API key.
+        - echo "DEV_API_KEY=$DEV_API_KEY" >> .env
         - apk add --no-cache docker-compose
-        - docker-compose down -v  --remove-orphans --rmi all
-        - docker-compose build --no-cache
+        - docker-compose up --force-recreate --build
+        - docker image prune -f
+
