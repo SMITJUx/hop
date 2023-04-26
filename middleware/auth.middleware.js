@@ -1,18 +1,19 @@
-require('dotenv').config()
-
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/auth/user.model')
+const config = require('../config')
+
+const { auth: { accessTokenPrivateKey, refreshTokenPrivateKey } } = config.params
 
 exports.getAccessToken = function (user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_PRIVATE_KEY, { expiresIn: '10m' })
+    return jwt.sign(user, accessTokenPrivateKey, { expiresIn: '10m' })
 }
 
 exports.getRefreshToken = function (user) {
-    return jwt.sign(user, process.env.REFRESH_TOKEN_PRIVATE_KEY, { expiresIn: '7d' })
+    return jwt.sign(user, refreshTokenPrivateKey, { expiresIn: '7d' })
 }
 
 exports.localStrategy = new LocalStrategy(User.authenticate())
@@ -35,7 +36,7 @@ const jwtRefreshTokenCookieExtractor = function(req) {
 exports.jwtStrategy = new JwtStrategy(
     {
         jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
-        secretOrKey: process.env.ACCESS_TOKEN_PRIVATE_KEY,
+        secretOrKey: accessTokenPrivateKey,
     },
     (jwt_payload, done) => {
         User.findOne({ _id: jwt_payload._id }, (err, user) => {
@@ -53,7 +54,7 @@ exports.jwtStrategy = new JwtStrategy(
 exports.jwtRefreshStrategy = new JwtStrategy(
     {
         jwtFromRequest: ExtractJwt.fromExtractors([jwtRefreshTokenCookieExtractor]),
-        secretOrKey: process.env.REFRESH_TOKEN_PRIVATE_KEY,
+        secretOrKey: refreshTokenPrivateKey,
     },
     (jwt_payload, done) => {
         User.findOne({ _id: jwt_payload._id }, (err, user) => {

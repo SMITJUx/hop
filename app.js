@@ -1,4 +1,3 @@
-require('dotenv').config()
 require('./models/db')
 
 const createError = require('http-errors')
@@ -9,7 +8,7 @@ const passport = require('passport')
 const helmet = require('helmet')
 const cors = require('cors')
 const rateLimit = require('./middleware/limit.middleware').rateLimit
-const authRouter = require('./routes/auth.router')
+const authRouter = require('./routes/auth/auth.router')
 const authenticate = require('./middleware/auth.middleware')
 const User = require('./models/auth/user.model')
 

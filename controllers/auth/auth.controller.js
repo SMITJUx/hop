@@ -1,8 +1,7 @@
-require('dotenv').config()
-
 const passport = require('passport')
-const authenticate = require('../middleware/auth.middleware')
-const User = require('../models/auth/user.model')
+const authenticate = require('../../middleware/auth.middleware')
+const User = require('../../models/auth/user.model')
+const config = require('../../config')
 
 const controller = {
     login: async function (req, res, next) {
@@ -11,13 +10,13 @@ const controller = {
 
         res.statusCode = 200
         res.cookie("accessToken", accessToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
             maxAge: 604800000 // 7 days
         })
         res.cookie("refreshToken", refreshToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
             maxAge: 604800000 // 7 days
@@ -54,7 +53,7 @@ const controller = {
 
         res.statusCode = 200
         res.cookie("accessToken", accessToken, {
-            secure: process.env.NODE_ENV !== 'dev',
+            secure: config.env !== 'dev',
             httpOnly: true,
             sameSite: 'Strict',
             maxAge: 604800000 // 7 days
