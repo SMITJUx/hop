@@ -1,19 +1,37 @@
+require('dotenv').config()
+
 const passport = require('passport')
 const authenticate = require('../middleware/auth.middleware')
-const User = require('../models/user.model')
+const User = require('../models/auth/user.model')
 
 const controller = {
-    login: function (req, res) {
-        const token = authenticate.getToken({ _id: req.user._id })
+    login: async function (req, res, next) {
+        const accessToken = authenticate.getAccessToken({ _id: req.user._id })
+        const refreshToken = authenticate.getRefreshToken({ _id: req.user._id })
 
         res.statusCode = 200
+        res.cookie("accessToken", accessToken, {
+            secure: process.env.NODE_ENV !== 'dev',
+            httpOnly: true,
+            sameSite: 'Strict',
+            maxAge: 604800000 // 7 days
+        })
+        res.cookie("refreshToken", refreshToken, {
+            secure: process.env.NODE_ENV !== 'dev',
+            httpOnly: true,
+            sameSite: 'Strict',
+            maxAge: 604800000 // 7 days
+        })
         res.setHeader('Content-Type', 'application/json')
-        res.json({ success: true, token: token, status: 'You are successfully logged in!' })
+        res.json({
+            success: true,
+            status: 'You are successfully logged in!',
+        })
     },
 
     register: async function (req, res, next) {
         await User.register(
-            new User({ username: req.body.username }),
+            new User({ username: req.body.username, email: req.body.email }),
             req.body.password,
             (err, user) => {
                 if (err) {
@@ -24,11 +42,28 @@ const controller = {
                     passport.authenticate('local')(req, res, () => {
                         res.statusCode = 200
                         res.setHeader('Content-Type', 'application/json')
-                        res.json({ success: true, status: 'Registration Successful!' })
+                        res.json({ success: true, status: 'Registration successful!' })
                     })
                 }
             },
         )
+    },
+
+    refresh: async function (req, res, next) {
+        const accessToken = authenticate.getAccessToken({ _id: req.user._id })
+
+        res.statusCode = 200
+        res.cookie("accessToken", accessToken, {
+            secure: process.env.NODE_ENV !== 'dev',
+            httpOnly: true,
+            sameSite: 'Strict',
+            maxAge: 604800000 // 7 days
+        })
+        res.setHeader('Content-Type', 'application/json')
+        res.json({
+            success: true,
+            status: 'You have successfully refreshed your JWT access token!',
+        })
     },
 
     users: async function (req, res, next) {

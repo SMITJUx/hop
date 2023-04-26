@@ -1,18 +1,40 @@
 require('dotenv').config()
 
 const passport = require('passport')
-const User = require('../models/user.model')
+const jwt = require('jsonwebtoken')
+const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
-const jwt = require('jsonwebtoken')
+const User = require('../models/auth/user.model')
 
-exports.getToken = function (user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_PRIVATE_KEY, { expiresIn: 3600 })
+exports.getAccessToken = function (user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_PRIVATE_KEY, { expiresIn: '10m' })
+}
+
+exports.getRefreshToken = function (user) {
+    return jwt.sign(user, process.env.REFRESH_TOKEN_PRIVATE_KEY, { expiresIn: '7d' })
+}
+
+exports.localStrategy = new LocalStrategy(User.authenticate())
+
+const jwtAccessTokenCookieExtractor = function(req) {
+    let accessToken = null
+    if (req && req.cookies) {
+        accessToken = req.cookies['accessToken']
+    }
+    return accessToken
+}
+const jwtRefreshTokenCookieExtractor = function(req) {
+    let refreshToken = null
+    if (req && req.cookies) {
+        refreshToken = req.cookies['refreshToken']
+    }
+    return refreshToken
 }
 
 exports.jwtStrategy = new JwtStrategy(
     {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJwt.fromExtractors([jwtAccessTokenCookieExtractor]),
         secretOrKey: process.env.ACCESS_TOKEN_PRIVATE_KEY,
     },
     (jwt_payload, done) => {
@@ -28,4 +50,24 @@ exports.jwtStrategy = new JwtStrategy(
     },
 )
 
-exports.verifyUser = passport.authenticate('jwt', { session: false })
+exports.jwtRefreshStrategy = new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromExtractors([jwtRefreshTokenCookieExtractor]),
+        secretOrKey: process.env.REFRESH_TOKEN_PRIVATE_KEY,
+    },
+    (jwt_payload, done) => {
+        User.findOne({ _id: jwt_payload._id }, (err, user) => {
+            if (err) {
+                return done(err, false)
+            } else if (user) {
+                return done(null, user)
+            } else {
+                return done(null, false)
+            }
+        })
+    },
+)
+
+exports.verifyUserLocal = passport.authenticate('local', { session: false })
+exports.verifyUserJwt = passport.authenticate('jwt', { session: false })
+exports.verifyUserJwtRefresh = passport.authenticate('jwt-refresh', { session: false })
