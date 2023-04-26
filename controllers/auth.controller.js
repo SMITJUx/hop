@@ -19,18 +19,8 @@ const controller = {
             token.save()
 
             res.statusCode = 200
-            res.cookie('accessToken', accessToken, {
-                secure: config.env !== 'dev',
-                httpOnly: true,
-                sameSite: 'Strict',
-                maxAge: 604800000, // 7 days
-            })
-            res.cookie('refreshToken', refreshToken, {
-                secure: config.env !== 'dev',
-                httpOnly: true,
-                sameSite: 'Strict',
-                maxAge: 604800000, // 7 days
-            })
+            res.cookie('accessToken', accessToken, config.cookies)
+            res.cookie('refreshToken', refreshToken, config.cookies)
             res.setHeader('Content-Type', 'application/json')
             res.json({
                 success: true,
@@ -70,21 +60,21 @@ const controller = {
             let refreshToken = authenticate.jwtRefreshTokenCookieExtractor(req)
             let token = await RefreshToken.findOne({ userId: req.user.id, value: refreshToken })
 
-            if (token) {
-                if (token.revoked) {
-                    const user = await User.findOne({ _id: req.user.id })
-                    if (user) {
-                        user.revoked = Date.now()
-                        user.save()
-                    }
-                    res.status(401).send(
-                        "You are using a used JWT token, it's suspicious, your account is banned.",
-                    )
-                    return
-                } else {
-                    token.revoked = Date.now()
-                    token.save()
+            if (token && token.revoked) {
+                const user = await User.findOne({ _id: req.user.id })
+                if (user) {
+                    user.revoked = Date.now()
+                    user.save()
                 }
+                res.status(401).send(
+                    "You are using a used JWT token, it's suspicious, your account is banned.",
+                )
+                return
+            }
+
+            if (token && !token.revoked) {
+                token.revoked = Date.now()
+                token.save()
             }
 
             const accessToken = authenticate.getAccessToken({ _id: req.user._id })
@@ -94,18 +84,8 @@ const controller = {
             token.save()
 
             res.statusCode = 200
-            res.cookie('accessToken', accessToken, {
-                secure: config.env !== 'dev',
-                httpOnly: true,
-                sameSite: 'Strict',
-                maxAge: 604800000, // 7 days
-            })
-            res.cookie('refreshToken', refreshToken, {
-                secure: config.env !== 'dev',
-                httpOnly: true,
-                sameSite: 'Strict',
-                maxAge: 604800000, // 7 days
-            })
+            res.cookie('accessToken', accessToken, config.cookies)
+            res.cookie('refreshToken', refreshToken, config.cookies)
             res.setHeader('Content-Type', 'application/json')
             res.json({
                 success: true,

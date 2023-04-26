@@ -21,6 +21,13 @@ config.auth = {
     },
 }
 
+config.cookies = {
+    secure: config.env !== 'dev',
+    httpOnly: true,
+    sameSite: 'Strict',
+    maxAge: 604800000, // 7 days
+}
+
 config.api = {
     baseUrl: process.env.BASE_URL || '',
     key: process.env.API_KEY || '',

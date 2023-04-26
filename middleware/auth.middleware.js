@@ -20,6 +20,7 @@ const verify = (jwt_payload, done) => {
         }
     })
 }
+
 const verifyAdmin = (jwt_payload, done) => {
     User.findOne({ _id: jwt_payload._id, roles: roles.admin, revoked: null }, (err, user) => {
         if (err) {
@@ -30,7 +31,6 @@ const verifyAdmin = (jwt_payload, done) => {
             return done(null, false)
         }
     })
-
 }
 
 exports.jwtAccessTokenCookieExtractor = (req) => {
@@ -40,6 +40,7 @@ exports.jwtAccessTokenCookieExtractor = (req) => {
     }
     return accessToken
 }
+
 exports.jwtRefreshTokenCookieExtractor = (req) => {
     let refreshToken = null
     if (req && req.cookies) {
