@@ -44,7 +44,8 @@ app.use(
     ['/api/docs', '/api', '/'],
     swaggerUi.serve,
     swaggerUi.setup(swaggerJsdoc(config.swagger), {
-        explorer: true,
+        explorer: false,
+        customSiteTitle: 'hop',
         customfavIcon: __dirname + '/public/favicon.png',
     }),
 )

@@ -86,7 +86,7 @@ config.swagger = {
         },
         servers: [
             {
-                url: config.env !== 'dev' ? 'https://hophop.world' : 'http://localhost:3000',
+                url: config.env !== 'dev' ? 'https://www.hophop.world' : 'http://localhost:3000',
             },
         ],
     },
